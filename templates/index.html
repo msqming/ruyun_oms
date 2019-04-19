@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block connent %}
+    <table id="demo" lay-filter="test"></table>
+{% endblock %}
+
+{% block model_js %}
+    layui.use('table', function(){
+      var table = layui.table;
+      //第一个实例
+      table.render({
+        elem: '#demo'
+        ,height: 895  //表格高度
+        ,url: '/api_index/' //数据接口
+        ,page: true //开启分页
+        ,cols: [[ //表头
+          {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
+          ,{field: 'xinghao', title: '型号', width:80}
+          ,{field: 'pinlei', title: '品类', width:80, sort: true}
+          ,{field: 'new_old', title: '新/旧', width:80}
+          ,{field: 'dingwei', title: '定位', width: 177}
+          ,{field: 'pinming', title: '品名', width: 80, sort: true}
+          ,{field: 'cpu', title: 'CPU', width: 80, sort: true}
+          ,{field: 'xianka', title: '显卡', width: 80}
+          ,{field: 'neicun', title: '内存', width: 135, sort: true}
+          ,{field: 'ssd', title: 'SSD', width: 135, sort: true}
+          ,{field: 'hhd', title: 'HHD', width: 135, sort: true}
+          ,{field: 'model_name', title: '模具名称', width: 135, sort: true}
+          ,{field: 'config', title: '配置', width: 135, sort: true}
+          ,{field: 'pn', title: 'PN', width: 135, sort: true}
+        ]]
+      });
+    });
+{% endblock %}

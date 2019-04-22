@@ -82,18 +82,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ruyun_data',
         'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '',
+        'PASSWORD': 'ROOT123.com',
+        'HOST': '193.112.112.38',
         'PORT': 3306,
     }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'ruyun_data',
-    #     'USER': 'root',
-    #     'PASSWORD': 'ROOT123.com',
-    #     'HOST': '139.159.159.202',
-    #     'PORT': 3306,
-    # }
+
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),

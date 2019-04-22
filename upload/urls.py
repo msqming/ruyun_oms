@@ -18,6 +18,6 @@ from django.urls import path
 from upload import views
 
 urlpatterns = [
-    path('index/', views.Data_Upload.as_view()),
+    path('index/', views.DataUpload.as_view()),
 
 ]

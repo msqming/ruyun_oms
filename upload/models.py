@@ -3,9 +3,9 @@ from django.db import models
 
 class KcErpKccx(models.Model):
     """库存数据，ERP库存查询"""
-    riqi = models.DateField(null=False, verbose_name='日期')
-    spbm = models.CharField(null=False, max_length=64, verbose_name='商品编码')
-    leibie = models.CharField(null=False, max_length=32, verbose_name='类别')
+    riqi = models.DateField(verbose_name='日期')
+    spbm = models.CharField(max_length=64, verbose_name='商品编码')
+    leibie = models.CharField(max_length=32, verbose_name='类别')
     pinpai = models.CharField(max_length=32, verbose_name='品牌')
     spmc = models.CharField(max_length=128, verbose_name='商品名称')
     zsl = models.IntegerField(verbose_name='总数量')
@@ -30,20 +30,20 @@ class KcErpKccx(models.Model):
 
 class KcErpSplr(models.Model):
     """库存数据 ERP商品利润"""
-    cksj = models.CharField(max_length=32, null=False, verbose_name='出库时间')
-    zfrq = models.CharField(max_length=32, null=False, verbose_name='支付日期')
-    khmc = models.CharField(max_length=32, verbose_name='客户名称')
-    spbm = models.CharField(max_length=64, verbose_name='商品编码')
-    leibie = models.CharField(max_length=64, verbose_name='类别')
-    pinpai = models.CharField(max_length=16, verbose_name='品牌')
-    guige = models.CharField(max_length=128, verbose_name='规格')
+    cksj = models.CharField(max_length=32, verbose_name='出库时间')
+    zfrq = models.CharField(max_length=32, verbose_name='支付日期')
+    khmc = models.CharField(max_length=64, verbose_name='客户名称')
+    spbm = models.CharField(max_length=128, verbose_name='商品编码')
+    leibie = models.CharField(max_length=32, verbose_name='类别')
+    pinpai = models.CharField(max_length=32, verbose_name='品牌')
+    guige = models.CharField(max_length=512, verbose_name='规格')
     xilie = models.CharField(max_length=64, verbose_name='系列')
     xh = models.CharField(max_length=64, verbose_name='型号')
     spmc = models.CharField(max_length=256, verbose_name='商品名称')
     xz = models.IntegerField(verbose_name='性质')
-    leixing = models.CharField(max_length=32, verbose_name='类型')
-    danhao = models.CharField(max_length=32, verbose_name='单号')
-    wddh = models.CharField(max_length=64, verbose_name='网店单号')
+    leixing = models.CharField(max_length=16, verbose_name='类型')
+    danhao = models.CharField(max_length=64, verbose_name='单号')
+    wddh = models.CharField(max_length=128, verbose_name='网店单号')
     hyh = models.CharField(max_length=64, verbose_name='会员号')
     daofu = models.IntegerField(verbose_name='到付')
     zhiyuan = models.CharField(max_length=64, verbose_name='职员')
@@ -58,19 +58,20 @@ class KcErpSplr(models.Model):
     piao = models.IntegerField(verbose_name='票')
     zhcb = models.FloatField(verbose_name='折合成本')
     cbje = models.FloatField(verbose_name='成本金额')
-    mll = models.FloatField(verbose_name='毛利率')
+    mlr = models.FloatField(verbose_name='毛利润')
+    mllv = models.CharField(max_length=16,verbose_name='毛利率')
     zhlr = models.FloatField(verbose_name='折合利润')
-    zhlrl = models.FloatField(verbose_name='折合利润率')
-    yfcb = models.FloatField(verbose_name='运费成本')
-    ptfy = models.FloatField(verbose_name='平台费用')
-    fxfy = models.FloatField(verbose_name='返现费用')
-    qtfy = models.FloatField(verbose_name='其他费用')
-    yjml = models.FloatField(verbose_name='预计毛利')
-    yjmll = models.FloatField(verbose_name='预计毛利率')
-    yjjlr = models.FloatField(verbose_name='预计净利润')
-    yjjlrl = models.FloatField(verbose_name='预计净利润率')
-    pdsj = models.CharField(max_length=32, verbose_name='拍单时间')
-    bumen = models.CharField(max_length=32, verbose_name='部门')
+    zh_lrlv = models.CharField(max_length=16,verbose_name='折合利润率')
+    yf_cb = models.FloatField(verbose_name='运费成本')
+    pt_fy = models.FloatField(verbose_name='平台费用')
+    fx_fy = models.FloatField(verbose_name='返现费用')
+    qt_fy = models.FloatField(verbose_name='其他费用')
+    yj_ml = models.FloatField(verbose_name='预计毛利')
+    yj_mllv = models.CharField(max_length=16, verbose_name='预计毛利率')
+    yj_jlr = models.FloatField(verbose_name='预计净利润')
+    yj_jlrlv = models.CharField(max_length=16,verbose_name='预计净利润率')
+    pd_sj = models.CharField(max_length=32, verbose_name='拍单时间')
+    bumen = models.CharField(max_length=16, verbose_name='部门')
 
 
 class KcErpYdh(models.Model):
@@ -595,38 +596,41 @@ class Scph_sp_gyx(models.Model):
     jg_rs = models.BigIntegerField(verbose_name='加购人数')
     jy_je = models.BigIntegerField(verbose_name='交易金额')
 
+
 class Scdp_Sxdc_d(models.Model):
     """市场大盘，属性洞察，日度"""
     riqi = models.DateField(verbose_name='日期')
-    sx = models.CharField(max_length=32,verbose_name='属性')
-    sxz = models.CharField(max_length=128,verbose_name='属性值')
+    sx = models.CharField(max_length=32, verbose_name='属性')
+    sxz = models.CharField(max_length=128, verbose_name='属性值')
     jy_zs = models.BigIntegerField(verbose_name='交易指数')
     zf_js = models.BigIntegerField(verbose_name='支付件数')
-    caozuo = models.CharField(max_length=32,verbose_name='操作')
+    caozuo = models.CharField(max_length=32, verbose_name='操作')
+
 
 class Scdp_Sxdc_m(models.Model):
     """市场大盘，属性洞察，月度"""
     jt_pl = models.DateField(verbose_name='具体品类')
     tj_sj = models.DateField(verbose_name='统计时间')
-    sx = models.CharField(max_length=32,verbose_name='属性')
-    sxz = models.CharField(max_length=128,verbose_name='属性值')
+    sx = models.CharField(max_length=32, verbose_name='属性')
+    sxz = models.CharField(max_length=128, verbose_name='属性值')
     jy_zs = models.BigIntegerField(verbose_name='交易指数')
     zf_js = models.BigIntegerField(verbose_name='支付件数')
-    caozuo = models.CharField(max_length=32,verbose_name='操作')
+    caozuo = models.CharField(max_length=32, verbose_name='操作')
 
 
 class Gq_Mcbb_bb(models.Model):
     """天猫官旗，已卖出的宝贝,宝贝报表"""
-    dd_bh = models.CharField(max_length=32,verbose_name='订单编号')
-    title = models.CharField(max_length=256,verbose_name='标题')
+    dd_bh = models.CharField(max_length=32, verbose_name='订单编号')
+    title = models.CharField(max_length=256, verbose_name='标题')
     jiage = models.FloatField(verbose_name='价格')
     gm_sl = models.IntegerField(verbose_name='购买数量')
-    wb_xt_bh = models.CharField(max_length=256,verbose_name='外部系统编号')
-    sp_sx = models.CharField(max_length=128,verbose_name='商品属性')
+    wb_xt_bh = models.CharField(max_length=256, verbose_name='外部系统编号')
+    sp_sx = models.CharField(max_length=128, verbose_name='商品属性')
     tc_xx = models.FloatField(verbose_name='套餐信息')
-    beizhu = models.CharField(max_length=128,verbose_name='备注')
-    dd_zt = models.CharField(max_length=64,verbose_name='订单状态')
-    sj_bm = models.CharField(max_length=256,verbose_name='商家编码')
+    beizhu = models.CharField(max_length=128, verbose_name='备注')
+    dd_zt = models.CharField(max_length=64, verbose_name='订单状态')
+    sj_bm = models.CharField(max_length=256, verbose_name='商家编码')
+
 
 class Gq_Mcbb_dd(models.Model):
     """天猫官旗，已卖出的宝贝,订单报表"""

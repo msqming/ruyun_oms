@@ -189,11 +189,10 @@ class OperData(object):
             models.KcErpZksp.objects.bulk_create(res_list)
             del res_list[:]
 
-    def kc_spxx(self, file_obj):
+    def Kc_spxx(self, file_obj):
         """库存商品基础信息"""
         df = pd.read_excel(file_obj)
         df2 = df.fillna(0)
-
         res_list = []
         for n in range(df2.shape[0]):
             res_list.append(models.KcSpxx(

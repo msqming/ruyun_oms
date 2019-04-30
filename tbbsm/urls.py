@@ -16,16 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from rykc import views
-
 urlpatterns = [
-    path('index/', views.index, name='index'),
-    path('api_index/', views.api_index),
+    # path('index/', views.index, name='index'),
+    # path('api_index/', views.api_index),
 
     # 路由分发
     path('upload/', include('upload.urls')),
 
-    # path('data_upload/', views.data_upload),
+    path('login/', include('auth_mage.urls')),
 
     path('admin/', admin.site.urls),
 ]

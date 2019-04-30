@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'rykc.apps.RykcConfig',
     'upload.apps.UploadConfig',
+    'auth_mage.apps.AuthMageConfig',
 ]
 
 MIDDLEWARE = [
@@ -82,11 +82,18 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ruyun_data',
         'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '',
+        'PASSWORD': 'ROOT123.com',
+        'HOST': '193.112.112.38',
         'PORT': 3306,
     }
-
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'ruyun_data',
+    #     'USER': 'root',
+    #     'PASSWORD': 'ROOT123.com',
+    #     'HOST': '139.159.159.202',
+    #     'PORT': 3306,
+    # }
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
@@ -129,9 +136,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-
+# 配置静态文件路径
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_all')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+
+# 配置session
+SESSION_COOKIE_AGE = 172800 # Session的cookie失效日期(2天)（默认）
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # 是否关闭浏览器使得Session过期（默认）
+SESSION_SAVE_EVERY_REQUEST = True  # 是否每次请求都保存Session，默认修改之后才保存（默认）

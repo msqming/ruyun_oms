@@ -1,14 +1,55 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.views import View
-from upload import models
+from upload import models as up_models
+from auth_mage import models as auth_models
+from django.utils.decorators import method_decorator
 import os
+import requests
 import json
+
 import pandas as pd
 
 
 class OperData(object):
 
-    def kc_splr(self, file_obj):
+    def kc_splr(self,file_obj):
+        """ERP商品利润"""
+        response = s.post(url=api2_url, headers=headers2)
+        # if api_data.status_code == 200:
+        #     return api_data.json()['data']
+        result = response.json()['data']
+
+        res_list = []
+        for data_itmes in result:
+            res_list.append(up_models.Erp_Stock(
+                create_time=data_itmes['create_time'] if data_itmes['create_time'] else 0,
+                customer_name=data_itmes['customer_name'] if data_itmes['customer_name'] else 0,
+                c_sku=data_itmes['c_sku'] if data_itmes['c_sku'] else 0,
+                c_series=data_itmes['c_series'] if data_itmes['c_series'] else 0,
+                c_brand=data_itmes['c_brand'] if data_itmes['c_brand'] else 0,
+                c_category=data_itmes['c_category'] if data_itmes['c_category'] else 0,
+                c_goods_name=data_itmes['c_goods_name'] if data_itmes['c_goods_name'] else 0,
+                c_ean13=data_itmes['c_ean13'] if data_itmes['c_ean13'] else 0,
+                sales_billcode=data_itmes['sales_billcode'] if data_itmes['sales_billcode'] else 0,
+                c_source_billcode=data_itmes['c_source_billcode'] if data_itmes['c_source_billcode'] else 0,
+                n=data_itmes['n'] if data_itmes['n'] else 0,
+                d_price=data_itmes['d_price'] if data_itmes['d_price'] else 0,
+                d_amount=data_itmes['d_amount'] if data_itmes['d_amount'] else 0,
+                d_cost=data_itmes['d_cost'] if data_itmes['d_cost'] else 0,
+                d_amount_cost=data_itmes['d_amount_cost'] if data_itmes['d_amount_cost'] else 0,
+                d_discount=data_itmes['d_discount'] if data_itmes['d_discount'] else 0,
+                d_fare_display=data_itmes['d_fare_display'] if data_itmes['d_fare_display'] else 0,
+                d_fee_platform_display=data_itmes['d_fee_platform_display'] if data_itmes['d_fee_platform_display'] else 0,
+                d_back=data_itmes['d_back'] if data_itmes['d_back'] else 0,
+                d_fee_charge=data_itmes['d_fee_charge'] if data_itmes['d_fee_charge'] else 0,
+                t_send=data_itmes['t_send'] if data_itmes['t_send'] else 0,
+                t_pay_estimate=data_itmes['t_pay_estimate'] if data_itmes['t_pay_estimate'] else 0,
+                c_vip_code=data_itmes['c_vip_code'] if data_itmes['c_vip_code'] else 0,
+                emp_name=data_itmes['emp_name'] if data_itmes['emp_name'] else 0,
+                dept_name=data_itmes['dept_name'] if data_itmes['dept_name'] else 0,
+            ))
+
+    def kc_splr1(self, file_obj):
         """处理库存商品利润的模板"""
         df = pd.read_excel(file_obj)
         # # 遍历所有列名，排除不需要的
@@ -72,54 +113,109 @@ class OperData(object):
             del res_list[:]
 
     def kc_kccx(self, file_obj):
-        """处理库存/库存查询的模板"""
-        df = pd.read_excel(file_obj)
-        # # 遍历所有列名，排除不需要的
-        cols = [i for i in df.columns if i not in ['分库数', '调拨', '拆装', '来源', '单位', '供货商 ']]
-        df1 = df[cols]
-        df2 = df1.fillna(0)
+        """获取库存 api数据"""
 
-        riqi = file_obj.name[4:12]
-        rq = riqi[:4] + '-' + riqi[4:6] + '-' + riqi[6:8]
+        login_url = 'http://gzry.3cerp.com/_login'
+        payload = {
+            '_username': '陈志彬',
+            '_password': '379f78c2073e7f800eb1782977174edc',
+            '_device': 'false',
+            '_checked': 'false'
+        }
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+            'Cookie': 'DWRSESSIONID=vH6~xcUig5eLXnT3Yt~CgOieNdDvQ1t5YDm; UM_distinctid=169fc3d1e7e5e6-02b6a8a0a79b-36697e04-1fa400-169fc3d1e7f7d0; Hm_lvt_7567a7c24a073c4d5983affb6409356d=1554715058; Hm_lpvt_7567a7c24a073c4d5983affb6409356d=1554870729; _jzqa=1.2600623370342070000.1554878190.1554878190.1554878190.1; _jzqc=1; _jzqx=1.1554878190.1554878190.1.jzqsr=test%2Esrerp%2E3cwdb%2Ecom|jzqct=/index%2Ejsp.-; JSESSIONID=57F1A201C94743D2790974F6B05DE8A2',
+            'Host': 'gzry.3cerp.com',
+            'Origin': 'http://gzry.3cerp.com',
+            'Referer': 'http://gzry.3cerp.com/login.jsp',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+        }
+        headers2 = {
+            'Host': 'gzry.3cerp.com',
+            'Origin': 'http://gzry.3cerp.com',
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+        }
+
+        s = requests.session()
+        s.post(url=login_url, data=payload, headers=headers)
+        api_url = 'http://gzry.3cerp.com/pages/stock/searchGoodsExtend.htm?pageSize=100'
+
+        res2 = s.post(url=api_url, headers=headers2)
+        total = res2.json()['total']
+        print(total)
+
+        api2_url = 'http://gzry.3cerp.com/pages/stock/searchGoodsExtend.htm?totalCount={0}&pageSize=2000&pageIndex=0'.format(
+            total)
+
+        response = s.post(url=api2_url, headers=headers2)
+        # if api_data.status_code == 200:
+        #     return api_data.json()['data']
+        result = response.json()['data']
 
         res_list = []
-        for n in range(df2.shape[0]):
-            res_list.append(models.KcErpKccx(
-                riqi=rq,
-                spbm=df2.iloc[n][0],
-                leibie=df2.iloc[n][1],
-                pinpai=df2.iloc[n][2],
-                spmc=df2.iloc[n][3],
-                zsl=df2.iloc[n][4],
-                kxs=df2.iloc[n][5],
-                djcb=df2.iloc[n][6],
-                je=df2.iloc[n][7],
-                cwkc=df2.iloc[n][8],
-                hsbz=df2.iloc[n][9],
-                hsxj=df2.iloc[n][10],
-                wsxj=df2.iloc[n][11],
-                dairu=df2.iloc[n][12],
-                daichu=df2.iloc[n][13],
-                sczt=df2.iloc[n][14],
-                daishen=df2.iloc[n][15],
-                huola=df2.iloc[n][16],
-                zl=df2.iloc[n][17],
-                xz=df2.iloc[n][18],
-                zhcgsj=df2.iloc[n][19],
-                hsyj=df2.iloc[n][20],
-                wsyj=df2.iloc[n][21],
+        for data_itmes in result:
+            res_list.append(up_models.Erp_Stock(
+                b_c_sku=data_itmes['b_c_sku'] if data_itmes['b_c_sku'] else 0,
+                b_c_name=data_itmes['b_c_name'] if data_itmes['b_c_name'] else 0,
+                d_c_bom_type=data_itmes['d_c_bom_type'] if data_itmes['d_c_bom_type'] else 0,
+                b_c_brand=data_itmes['b_c_brand'] if data_itmes['b_c_brand'] else 0,
+                category_name=data_itmes['category_name'] if data_itmes['category_name'] else 0,
+                c_series=data_itmes['c_series'] if data_itmes['c_series'] else 0,
+                n_finance=data_itmes['n_finance'] if data_itmes['n_finance'] else 0,
+                n_able=data_itmes['n_able'] if data_itmes['n_able'] else 0,
+                n_purchase=data_itmes['n_purchase'] if data_itmes['n_purchase'] else 0,
+                n_sale=data_itmes['n_sale'] if data_itmes['n_sale'] else 0,
+                n_sale_net=data_itmes['n_sale_net'] if data_itmes['n_sale_net'] else 0,
+                n_production=data_itmes['n_production'] if data_itmes['n_production'] else 0,
+                d_cost=data_itmes['d_cost'] if data_itmes['d_cost'] else 0,
+                kc_d_amount=data_itmes['kc_d_amount'] if data_itmes['kc_d_amount'] else 0,
+                d_cost_estimate_tax=data_itmes['d_cost_estimate_tax'] if data_itmes['d_cost_estimate_tax'] else 0,
+                d_cost_estimate_untax=data_itmes['d_cost_estimate_untax'] if data_itmes['d_cost_estimate_untax'] else 0,
+                d_cost_sale_tax=data_itmes['d_cost_sale_tax'] if data_itmes['d_cost_sale_tax'] else 0,
+                d_cost_sale_untax=data_itmes['d_cost_sale_untax'] if data_itmes['d_cost_sale_untax'] else 0,
+                d_rate_tax=data_itmes['d_rate_tax'] if data_itmes['d_rate_tax'] else 0,
+                d_weight=data_itmes['d_weight'] if data_itmes['d_weight'] else 0,
+                t_last_purchase=data_itmes['t_last_purchase'] if data_itmes['t_last_purchase'] else 0,
+                goods_id=data_itmes['goods_id'] if data_itmes['goods_id'] else 0,
             ))
 
             if len(res_list) == 100:
-                models.KcErpKccx.objects.bulk_create(res_list)
+                up_models.Erp_Stock.objects.bulk_create(res_list)
                 del res_list[:]  # 每一次插入完清空列表，释放内存
 
         # 循环最后一次不够数量的时候再执行插入一次
         if res_list:
-            models.KcErpKccx.objects.bulk_create(res_list)
+            up_models.Erp_Stock.objects.bulk_create(res_list)
             del res_list[:]
 
     def kc_ydh(self, file_obj):
+        """ERP采购分析"""
+        response = s.post(url=api2_url, headers=headers2)
+        # if api_data.status_code == 200:
+        #     return api_data.json()['data']
+        result = response.json()['data']
+
+        res_list = []
+        for data_itmes in result:
+            res_list.append(up_models.Erp_Stock(
+                create_time=data_itmes['create_time'] if data_itmes['create_time'] else 0,
+                t_get_estimate=data_itmes['t_get_estimate'] if data_itmes['t_get_estimate'] else 0,
+                d_cq=data_itmes['d_cq'] if data_itmes['d_cq'] else 0,
+                c_billcode=data_itmes['c_billcode'] if data_itmes['c_billcode'] else 0,
+                c_name=data_itmes['c_name'] if data_itmes['c_name'] else 0,
+                c_sku=data_itmes['c_sku'] if data_itmes['c_sku'] else 0,
+                goodsName=data_itmes['goodsName'] if data_itmes['goodsName'] else 0,
+                kd_n=data_itmes['n'] if data_itmes['n'] else 0,
+                d_price=data_itmes['d_price'] if data_itmes['d_price'] else 0,
+                goods_d_amount=data_itmes['goods_d_amount'] if data_itmes['goods_d_amount'] else 0,
+                n_get=data_itmes['n_get'] if data_itmes['n_get'] else 0,
+                goods_n_noget=data_itmes['goods_n_noget'] if data_itmes['goods_n_noget'] else 0,
+                goods_d_noget=data_itmes['goods_d_noget'] if data_itmes['goods_d_noget'] else 0,
+                goods_id=data_itmes['goods_id'] if data_itmes['goods_id'] else 0,
+                business_name=data_itmes['c_handing_emp_org_name'] if data_itmes['c_handing_emp_org_name'] else 0,
+            ))
+
+    def kc_ydh1(self, file_obj):
         """处理库存 预到货表格模板"""
         df = pd.read_excel(file_obj)
         df2 = df.fillna(0)
@@ -931,8 +1027,23 @@ class OperData(object):
         #     pass
 
 
+def auth(func):
+    """
+    装饰器功能，登录验证,erp登录保存session
+    :param func:
+    :return:
+    """
+    def inner(request,*args,**kwargs):
+        return func(request,*args,**kwargs)
+    return inner
+
+
 class DataUpload(View):
     """数据上传模块"""
+
+    @method_decorator(auth)
+    def dispatch(self, request, *args, **kwargs):
+        return super(DataUpload, self).dispatch(request, *args, **kwargs)
 
     def get(self, request):
         return render(request, 'data_upload.html')
